@@ -22,13 +22,18 @@
     </header>
 
     <section class="todoapp__main" data-cy="TodoList">
-      <div class="todo" [class.completed]="todo.completed" *ngFor="let todo of todos">
+      <div
+        class="todo"
+        [class.completed]="todo.completed"
+        *ngFor="let todo of todos; let i = index"
+      >
         <label class="todo__status-label">
           <input
             data-cy="TodoStatus"
             type="checkbox"
             class="todo__status"
-            checked
+            [checked]="todo.completed"
+            (change)="handleTodoToggle($event, todo)"
           />
         </label>
 
@@ -47,7 +52,7 @@
             {{ todo.title }}
           </span>
 
-          <button type="button" class="todo__remove" data-cy="TodoDelete">
+          <button type="button" class="todo__remove" (click)="todos.splice(i, 1)">
             ×
           </button>
         </ng-template>

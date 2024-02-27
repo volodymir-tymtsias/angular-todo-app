@@ -9,6 +9,12 @@ const todos = [
   {id: 4, title: 'Vue.js', completed: false},
 ];
 
+interface Todo {
+  id: number;
+  title: string;
+  completed: boolean;
+};
+
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -23,4 +29,8 @@ export class AppComponent {
   title = 'angular-todo-app';
   editing = false;
   todos = todos;
+
+  handleTodoToggle(event: Event, todo: Todo) {
+    todo.completed = (event.target as HTMLInputElement).checked;
+  }
 }
