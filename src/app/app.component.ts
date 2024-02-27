@@ -28,9 +28,9 @@ interface Todo {
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  title = 'angular-todo-app';
-  editing = false;
   todos = todos;
+  editing = false;
+  title = '';
 
   handleTodoToggle(event: Event, todo: Todo) {
     todo.completed = (event.target as HTMLInputElement).checked;
@@ -38,5 +38,20 @@ export class AppComponent {
 
   get activeTodos() {
     return this.todos.filter(todo => !todo.completed);
+  }
+
+  addTodo() {
+    if(!this.title) {
+      return;
+    }
+
+    const newTodo: Todo = {
+      id: Date.now(),
+      title: this.title,
+      completed: false,
+    }
+
+    this.todos.push(newTodo);
+    this.title = '';
   }
 }
