@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterOutlet } from '@angular/router';
 
 const todos = [
@@ -23,6 +23,7 @@ interface Todo {
     RouterOutlet,
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
@@ -30,7 +31,20 @@ interface Todo {
 export class AppComponent {
   todos = todos;
   editing = false;
-  title = '';
+  todoForm = new FormGroup({
+    title: new FormControl('', {
+      nonNullable: true,
+      validators: [
+        Validators.required,
+        Validators.minLength(2),
+      ],
+    }),
+  });
+
+  get title() {
+    return this.todoForm.get('title') as FormControl;
+  };
+
 
   handleTodoToggle(event: Event, todo: Todo) {
     todo.completed = (event.target as HTMLInputElement).checked;
@@ -41,17 +55,17 @@ export class AppComponent {
   }
 
   addTodo() {
-    if(!this.title) {
+    if(this.title.invalid) {
       return;
     }
 
     const newTodo: Todo = {
       id: Date.now(),
-      title: this.title,
+      title: this.title.value,
       completed: false,
     }
 
     this.todos.push(newTodo);
-    this.title = '';
+    this.title.reset();
   }
 }
