@@ -2,6 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterOutlet } from '@angular/router';
+import { TodoComponent } from './components/todo/todo.component';
+import { Todo } from './types/todo';
 
 const todos = [
   {id: 1, title: 'HTML+CSS', completed: true},
@@ -9,12 +11,6 @@ const todos = [
   {id: 3, title: 'React', completed: false},
   {id: 4, title: 'Vue.js', completed: false},
 ];
-
-interface Todo {
-  id: number;
-  title: string;
-  completed: boolean;
-};
 
 @Component({
   selector: 'app-root',
@@ -24,13 +20,14 @@ interface Todo {
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    TodoComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
   todos = todos;
-  editing = false;
+  
   todoForm = new FormGroup({
     title: new FormControl('', {
       nonNullable: true,
