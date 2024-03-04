@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterOutlet } from '@angular/router';
 import { TodoComponent } from './components/todo/todo.component';
@@ -25,9 +25,9 @@ const todos = [
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
-export class AppComponent {
+export class AppComponent implements OnInit{
   todos = todos;
-  
+
   todoForm = new FormGroup({
     title: new FormControl('', {
       nonNullable: true,
@@ -49,6 +49,18 @@ export class AppComponent {
 
   get activeTodos() {
     return this.todos.filter(todo => !todo.completed);
+  }
+
+  constructor() {}
+
+  ngOnInit(): void {
+    setTimeout(() => {
+      this.todos[1] = {...this.todos[1], title: 'qwerty'}
+    }, 2000);
+  }
+
+  trackById(i: number, todo: Todo) {
+    return todo.id;
   }
 
   addTodo() {
