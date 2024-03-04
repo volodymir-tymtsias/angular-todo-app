@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { Todo } from '../../types/todo';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -18,5 +18,18 @@ export class TodoComponent {
 
   @Input() todo!: Todo;
 
+  @ViewChild('titleField')
+  set findedTitleField(field: ElementRef) {
+    if (field) {
+      field.nativeElement.focus();
+    }
+  };
+
   editing = false;
+
+  edit() {
+    this.editing = true;
+
+    this.findedTitleField?.nativeElement.focus();
+  }
 }

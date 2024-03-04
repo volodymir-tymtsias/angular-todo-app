@@ -13,15 +13,18 @@
 
   <form *ngIf="editing; else titleBlock">
     <input
+      #titleField
       type="text"
       class="todo__title-field"
       placeholder="Empty todo will be deleted"
-      value="Todo is being edited now"
+      name="title"
+      [(ngModel)]="todo.title"
+      (keyup.escape)="editing = false"
     />
   </form>
 
   <ng-template #titleBlock>
-    <span class="todo__title">
+    <span class="todo__title" (dblclick)="editing = true">
       {{ todo.title }}
     </span>
 
