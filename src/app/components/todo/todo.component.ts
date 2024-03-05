@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { Todo } from '../../types/todo';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -12,9 +12,12 @@ import { FormsModule } from '@angular/forms';
   ],
   templateUrl: './todo.component.html',
   styleUrl: './todo.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TodoComponent implements OnChanges {
   @Output() delete = new EventEmitter();
+  @Output() togle = new EventEmitter();
+  @Output() rename = new EventEmitter<string>();
 
   @Input() todo!: Todo;
 
@@ -46,6 +49,6 @@ export class TodoComponent implements OnChanges {
     }
 
     this.editing = false;
-    this.todo.title = this.title;
+    this.rename.emit(this.title);
   }
 }

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterOutlet } from '@angular/router';
 import { TodoComponent } from './components/todo/todo.component';
@@ -23,9 +23,10 @@ const todos = [
     TodoComponent,
   ],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrl: './app.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent implements OnInit{
+export class AppComponent {
   todos = todos;
 
   todoForm = new FormGroup({
@@ -51,30 +52,51 @@ export class AppComponent implements OnInit{
     return this.todos.filter(todo => !todo.completed);
   }
 
-  constructor() {}
-
-  ngOnInit(): void {
-    setTimeout(() => {
-      this.todos[1] = {...this.todos[1], title: 'qwerty'}
-    }, 2000);
-  }
-
   trackById(i: number, todo: Todo) {
     return todo.id;
   }
 
-  addTodo() {
+  handleFormSubmit() {
     if(this.title.invalid) {
       return;
     }
 
+    this.addTodo(this.title.value);
+
+    this.title.reset();
+  }
+
+  addTodo(newTitle: string) {
     const newTodo: Todo = {
       id: Date.now(),
-      title: this.title.value,
+      title: newTitle,
       completed: false,
     }
 
-    this.todos.push(newTodo);
-    this.title.reset();
+    this.todos = [...this.todos, newTodo];
+  }
+
+  renameTodo(todoId: number, newTitle: string) {
+    this.todos = this.todos.map(todo => {
+      if (todoId !== todo.id) {
+        return todo;
+      }
+
+      return { ...todo, title: newTitle };
+    });
+  }
+
+  togleTodo(todoId: number) {
+    this.todos = this.todos.map(todo => {
+      if (todoId !== todo.id) {
+        return todo;
+      }
+
+      return { ...todo, completed: !todo.completed };
+    });
+  }
+
+  deleteTodo(todoId: number) {
+    this.todos = this.todos.filter(todo => todo.id !== todoId);
   }
 }
