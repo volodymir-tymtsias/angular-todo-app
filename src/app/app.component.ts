@@ -1,11 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterOutlet } from '@angular/router';
 import { TodoComponent } from './components/todo/todo.component';
 import { Todo } from './types/todo';
+import { TodoFormComponent } from './components/todo-form/todo-form.component';
+import { FilterActivePipe } from './pipes/filter-active.pipe';
 
-const todos = [
+const todosFromServer = [
   {id: 1, title: 'HTML+CSS', completed: true},
   {id: 2, title: 'JS', completed: false},
   {id: 3, title: 'React', completed: false},
@@ -21,49 +23,40 @@ const todos = [
     FormsModule,
     ReactiveFormsModule,
     TodoComponent,
+    TodoFormComponent,
+    FilterActivePipe,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent {
-  todos = todos;
+export class AppComponent implements OnInit{
+  _todos: Todo[] = [];
+  activeTodos: Todo[] = [];
 
-  todoForm = new FormGroup({
-    title: new FormControl('', {
-      nonNullable: true,
-      validators: [
-        Validators.required,
-        Validators.minLength(2),
-      ],
-    }),
-  });
+  get todos() {
+    return this._todos;
+  }
 
-  get title() {
-    return this.todoForm.get('title') as FormControl;
-  };
+  set todos(todos: Todo[]) {
+    if (todos === this._todos) {
+      return;
+    }
 
+    this._todos = todos;
+    this.activeTodos = this._todos.filter(todo => !todo.completed);
+  }
+
+  ngOnInit(): void {
+    this.todos = todosFromServer;
+  }
 
   handleTodoToggle(event: Event, todo: Todo) {
     todo.completed = (event.target as HTMLInputElement).checked;
   }
 
-  get activeTodos() {
-    return this.todos.filter(todo => !todo.completed);
-  }
-
   trackById(i: number, todo: Todo) {
     return todo.id;
-  }
-
-  handleFormSubmit() {
-    if(this.title.invalid) {
-      return;
-    }
-
-    this.addTodo(this.title.value);
-
-    this.title.reset();
   }
 
   addTodo(newTitle: string) {
