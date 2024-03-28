@@ -6,13 +6,7 @@ import { TodoComponent } from './components/todo/todo.component';
 import { Todo } from './types/todo';
 import { TodoFormComponent } from './components/todo-form/todo-form.component';
 import { FilterActivePipe } from './pipes/filter-active.pipe';
-
-const todosFromServer = [
-  {id: 1, title: 'HTML+CSS', completed: true},
-  {id: 2, title: 'JS', completed: false},
-  {id: 3, title: 'React', completed: false},
-  {id: 4, title: 'Vue.js', completed: false},
-];
+import { TodosService } from './services/todos.service';
 
 @Component({
   selector: 'app-root',
@@ -28,8 +22,9 @@ const todosFromServer = [
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  // changeDetection: ChangeDetectionStrategy.OnPush,
 })
+
 export class AppComponent implements OnInit{
   _todos: Todo[] = [];
   activeTodos: Todo[] = [];
@@ -47,8 +42,13 @@ export class AppComponent implements OnInit{
     this.activeTodos = this._todos.filter(todo => !todo.completed);
   }
 
+  constructor(
+    private todosService: TodosService,
+  ) {}
+
   ngOnInit(): void {
-    this.todos = todosFromServer;
+    this.todosService.getTodos()
+      .subscribe((todos) => this.todos = todos);
   }
 
   handleTodoToggle(event: Event, todo: Todo) {
@@ -60,13 +60,11 @@ export class AppComponent implements OnInit{
   }
 
   addTodo(newTitle: string) {
-    const newTodo: Todo = {
-      id: Date.now(),
-      title: newTitle,
-      completed: false,
-    }
-
-    this.todos = [...this.todos, newTodo];
+    this.todosService.createTodo(newTitle)
+      .subscribe((newTodo) => {
+        this.todosService.getTodos()
+          .subscribe((todos) => this.todos = todos);
+      });
   }
 
   renameTodo(todoId: number, newTitle: string) {
