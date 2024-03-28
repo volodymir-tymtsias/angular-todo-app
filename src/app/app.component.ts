@@ -47,7 +47,7 @@ export class AppComponent implements OnInit{
   ) {}
 
   ngOnInit(): void {
-    this.todosService.getTodos()
+    this.todosService.todos$
       .subscribe((todos) => this.todos = todos);
   }
 
@@ -61,33 +61,21 @@ export class AppComponent implements OnInit{
 
   addTodo(newTitle: string) {
     this.todosService.createTodo(newTitle)
-      .subscribe((newTodo) => {
-        this.todosService.getTodos()
-          .subscribe((todos) => this.todos = todos);
-      });
+      .subscribe();
   }
 
-  renameTodo(todoId: number, newTitle: string) {
-    this.todos = this.todos.map(todo => {
-      if (todoId !== todo.id) {
-        return todo;
-      }
-
-      return { ...todo, title: newTitle };
-    });
+  renameTodo(todo: Todo, title: string) {
+    this.todosService.updateTodo({ ...todo, title})
+      .subscribe();
   }
 
-  togleTodo(todoId: number) {
-    this.todos = this.todos.map(todo => {
-      if (todoId !== todo.id) {
-        return todo;
-      }
-
-      return { ...todo, completed: !todo.completed };
-    });
+  togleTodo(todo: Todo) {
+    this.todosService.updateTodo({ ...todo, completed: !todo.completed })
+      .subscribe();
   }
 
-  deleteTodo(todoId: number) {
-    this.todos = this.todos.filter(todo => todo.id !== todoId);
+  deleteTodo(todo: Todo) {
+    this.todosService.deleteTodo(todo)
+      .subscribe();
   }
 }
