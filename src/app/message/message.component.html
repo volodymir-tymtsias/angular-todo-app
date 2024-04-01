@@ -1,0 +1,20 @@
+<article
+  class="message is-danger"
+  [class.is-hidden]="hidden"
+>
+  <div class="message-header">
+    <p>
+      {{ title }}
+    </p>
+
+    <button
+      type="button"
+      class="delete"
+      (click)="hidden = true"
+    ></button>
+  </div>
+
+  <div class="message-body">
+    {{ message }}
+  </div>
+</article>
