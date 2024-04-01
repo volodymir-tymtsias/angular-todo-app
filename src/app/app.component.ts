@@ -49,6 +49,8 @@ export class AppComponent implements OnInit{
   ngOnInit(): void {
     this.todosService.todos$
       .subscribe((todos) => this.todos = todos);
+
+    this.todosService.loadTodos().subscribe();
   }
 
   handleTodoToggle(event: Event, todo: Todo) {
