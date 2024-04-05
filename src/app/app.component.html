@@ -1,7 +1,12 @@
-<nav>
-  <a routerLink="/todos" routerLinkActive="active">Todos</a>
-  <br>
-  <a routerLink="/about" routerLinkActive="active">About</a>
+<nav class="tabs">
+  <ul>
+    <li routerLinkActive="is-active">
+      <a routerLink="/todos">Todos</a>
+    </li>
+    <li routerLinkActive="is-active">
+      <a routerLink="/about">About</a>
+    </li>
+  </ul>
 </nav>
 
 <router-outlet></router-outlet>
