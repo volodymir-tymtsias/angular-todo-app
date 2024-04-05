@@ -4,7 +4,7 @@ import { AboutPageComponent } from './components/about-page/about-page.component
 
 export const routes: Routes = [
   {
-    path: 'todos',
+    path: 'todos/:status',
     component: TodosPageComponent,
   },
   {
@@ -14,7 +14,7 @@ export const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: '/todos',
+    redirectTo: '/todos/all',
     pathMatch: 'full',
   },
 ];

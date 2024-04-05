@@ -15,7 +15,7 @@
 
     <section class="todoapp__main" data-cy="TodoList">
       <app-todo
-        *ngFor="let todo of todos$ | async; let i = index; trackBy: trackById"
+        *ngFor="let todo of visibleTodos$ | async; let i = index; trackBy: trackById"
         [todo]="todo"
         (delete)="deleteTodo(todo)"
         (rename)="renameTodo(todo, $event)"
@@ -31,31 +31,7 @@
       </span>
 
       <!-- {/* Active link should have the 'selected' class */} -->
-      <nav class="filter" data-cy="Filter">
-        <a
-          href="#/"
-          class="filter__link selected"
-          data-cy="FilterLinkAll"
-        >
-          All
-        </a>
-
-        <a
-          href="#/active"
-          class="filter__link"
-          data-cy="FilterLinkActive"
-        >
-          Active
-        </a>
-
-        <a
-          href="#/completed"
-          class="filter__link"
-          data-cy="FilterLinkCompleted"
-        >
-          Completed
-        </a>
-      </nav>
+      <app-filter></app-filter>
 
       <!-- {/* this button should be disabled if there are no completed todos */} -->
       <button
