@@ -15,7 +15,7 @@
 
     <section class="todoapp__main" data-cy="TodoList">
       <app-todo
-        *ngFor="let todo of todos; let i = index; trackBy: trackById"
+        *ngFor="let todo of todos$ | async; let i = index; trackBy: trackById"
         [todo]="todo"
         (delete)="deleteTodo(todo)"
         (rename)="renameTodo(todo, $event)"
@@ -27,7 +27,7 @@
     <footer class="todoapp__footer" data-cy="Footer">
       <span class="todo-count" data-cy="TodosCounter">
         <!-- {{ (todos | filterActive).length }} items left -->
-        {{ activeTodos.length }} items left
+        {{ activeCount$ | async }} items left
       </span>
 
       <!-- {/* Active link should have the 'selected' class */} -->
